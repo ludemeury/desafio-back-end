@@ -14,7 +14,7 @@ class Owner < ApplicationRecord
   private
 
   def document_valid
-    valid = CPF.valid?(document).present?
+    valid = CPF.valid?(document, strict: true).present?
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document} - #{valid}")
 
     return true if valid
