@@ -20,5 +20,9 @@ RSpec.describe Owner, type: :model do
       Owner.create(name: 'joao pereira', document: '12345')
       expect(Owner.create(name: 'joao pereira', document: '12345')).to_not be_valid
     end
+
+    it 'is valid with all valid data' do
+      expect(Owner.create(name: 'joao pereira', document: '11138095079')).to be_valid
+    end
   end
 end

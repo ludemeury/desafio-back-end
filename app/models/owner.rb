@@ -16,5 +16,9 @@ class Owner < ApplicationRecord
   def document_valid
     valid = CPF.valid?(document).present?
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document} - #{valid}")
+
+    return true if valid
+
+    errors.add(:document, 'invalid')
   end
 end
