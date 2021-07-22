@@ -9,7 +9,7 @@ RSpec.describe FinancialMovement, type: :model do
   context 'Validations' do
 
     it 'is not valid without shop' do
-      expect(FinancialMovement.create(kind: 1, done_at: Time.current, value: 595.32, card: '1234567')).to_not be_valid
+      expect(FinancialMovement.create(kind: 1, done_at: Time.current, value: 595.32, card: '1234567').errors[:shop]&.first).to eq 'must exist'
     end
 
 
