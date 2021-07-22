@@ -8,4 +8,13 @@ class Owner < ApplicationRecord
   validates :document,
             presence: true,
             uniqueness: true
+
+  validate :document_valid
+
+  private
+
+  def document_valid
+    valid = CPF.valid?(document).present?
+    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document} - #{valid}")
+  end
 end
