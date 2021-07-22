@@ -9,20 +9,20 @@ RSpec.describe Owner, type: :model do
     end
 
     it 'is not valid without a document' do
-      expect(Owner.create(name: 'lud')).to_not be_valid
+      expect(Owner.create(name: 'maria de souza')).to_not be_valid
     end
 
     it 'is not valid without an name' do
-      expect(Owner.create(document: '123')).to_not be_valid
+      expect(Owner.create(document: '83330201002')).to_not be_valid
     end
 
     it 'is not valid with repeated document' do
-      Owner.create(name: 'joao pereira', document: '12345')
-      expect(Owner.create(name: 'joao pereira', document: '12345')).to_not be_valid
+      Owner.create(name: 'joao pereira', document: '48164028029')
+      expect(Owner.create(name: 'joao pereira', document: '48164028029')).to_not be_valid
     end
 
     it 'is valid with all valid data' do
-      expect(Owner.create(name: 'joao pereira', document: '11138095079')).to be_valid
+      expect(Owner.create(name: 'joao pereira', document: '48164028029')).to be_valid
     end
   end
 end
