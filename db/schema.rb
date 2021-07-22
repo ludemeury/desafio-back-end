@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_041242) do
+ActiveRecord::Schema.define(version: 2021_07_22_043125) do
+
+  create_table "financial_movements", force: :cascade do |t|
+    t.integer "kind"
+    t.datetime "done_at"
+    t.float "value"
+    t.string "card"
+    t.integer "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_financial_movements_on_shop_id"
+  end
 
   create_table "owners", force: :cascade do |t|
     t.string "name"
