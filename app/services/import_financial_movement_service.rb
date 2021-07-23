@@ -34,9 +34,9 @@ class ImportFinancialMovementService
   end
 
   def find_or_create_shop(movement)
-    shop_name = movement[:shop_name]
+    shop_name = movement.dig(:shop, :name)
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop_name}")
-    shop = shops_by_name[shop_name] ||= Shop.create(name: shop_name, owner: find_or_create_owner)
+    shop = shops_by_name[shop_name] ||= Shop.create(name: shop_name, owner: find_or_create_owner(movement))
   end
 
   def find_or_create_owner(movement)
@@ -52,7 +52,7 @@ class ImportFinancialMovementService
         kind: e[:kind],
         done_at: e[:done_at],
         value: e[:value],
-        e: [:card],
+        card: e[:card],
         shop: find_or_create_shop(e)
       )
     end
