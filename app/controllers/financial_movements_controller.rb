@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class FinancialMovementsController < ApplicationController
   def index
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
-    @financial_movements = FinancialMovement.all
+    @financial_movements = FinancialMovement.all.includes(shop: [:owner])
   end
 
   def upload
