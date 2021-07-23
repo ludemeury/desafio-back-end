@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class FinancialMovementParser
-  def self.parse(document_lines)
+  def self.parse(file_content)
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self}::#{__method__}")
-    return {} unless document_lines.is_a? Array
+    return unless file_content.is_a? String
+
+    document_lines = file_content.lines
 
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self}::#{__method__} - #{document_lines.length}")
 
