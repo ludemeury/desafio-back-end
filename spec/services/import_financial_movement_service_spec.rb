@@ -25,9 +25,31 @@ RSpec.describe ImportFinancialMovementService do
       expect(outputs).to eq inputs
     end
 
-    it 'all movements were imported with with existing shops' do
+    it 'all movements were imported with existing shops' do
       # import again
       FinancialMovement.delete_all
+      @movements_output = ImportFinancialMovementService.new(@movements_input).execute
+
+      inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
+      outputs = @movements_output.collect(&:shop).compact.select(&:persisted?).collect(&:name).compact.uniq.sort
+      expect(outputs).to eq inputs
+    end
+
+    it 'all movements were imported wihout shop' do
+      # import again
+      FinancialMovement.delete_all
+      Shop.delete_all
+      @movements_output = ImportFinancialMovementService.new(@movements_input).execute
+
+      inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
+      outputs = @movements_output.collect(&:shop).compact.select(&:persisted?).collect(&:name).compact.uniq.sort
+      expect(outputs).to eq inputs
+    end
+
+    it 'all movements were imported wihout owner' do
+      # import again
+      FinancialMovement.delete_all
+      Owner.delete_all
       @movements_output = ImportFinancialMovementService.new(@movements_input).execute
 
       inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort

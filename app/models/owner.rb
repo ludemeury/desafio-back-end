@@ -11,6 +11,8 @@ class Owner < ApplicationRecord
 
   validate :document_valid
 
+  has_many :shops
+
   private
 
   def document_valid

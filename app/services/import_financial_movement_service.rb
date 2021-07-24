@@ -9,41 +9,13 @@ class ImportFinancialMovementService
 
   def execute
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
-    return unless movements.present?
+    return [] unless movements.present?
 
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{movements.length}")
     import
   end
 
   private
-
-  def owners_by_doc
-    return @owners_by_doc if @owners_by_doc
-
-    owner_docs = movements.collect { |e| e.dig(:shop, :owner, :document) }.compact.uniq.sort
-    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{owner_docs}")
-    @owners_by_doc = Owner.where(document: owner_docs).index_by(&:document)
-  end
-
-  def shops_by_name
-    return @shops_by_name if @shops_by_name
-
-    shop_names = movements.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
-    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop_names}")
-    @shops_by_name = Shop.where(name: shop_names).index_by(&:name)
-  end
-
-  def find_or_create_shop(movement)
-    shop_name = movement.dig(:shop, :name)
-    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop_name}")
-    shops_by_name[shop_name] ||= Shop.create(name: shop_name, owner: find_or_create_owner(movement))
-  end
-
-  def find_or_create_owner(movement)
-    document = movement.dig(:shop, :owner, :document)
-    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document}")
-    owners_by_doc[document] ||= Owner.create(movement.dig(:shop, :owner))
-  end
 
   def import
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
@@ -58,5 +30,32 @@ class ImportFinancialMovementService
 
       movement
     end
+  end
+
+  def owners_by_doc
+    return @owners_by_doc if @owners_by_doc
+
+    owner_docs = movements.collect { |e| e.dig(:shop, :owner, :document) }.compact.uniq.sort
+    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{owner_docs}")
+    @owners_by_doc = Owner.where(document: owner_docs).includes(:shops).index_by(&:document)
+  end
+
+  def shops_by_owner
+    @shops_by_owner ||= {}
+  end
+
+  def find_or_create_shop(movement)
+    name = movement.dig(:shop, :name)
+    document = movement.dig(:shop, :owner, :document)
+    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{name} - #{document}")
+    owner = find_or_create_owner(movement)
+    shops_by_owner[document] ||= owner.shops.index_by(&:name)
+    shops_by_owner[document][name] ||= Shop.create(name: name, owner: owner)
+  end
+
+  def find_or_create_owner(movement)
+    document = movement.dig(:shop, :owner, :document)
+    Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document}")
+    owners_by_doc[document] ||= Owner.create(movement.dig(:shop, :owner))
   end
 end
