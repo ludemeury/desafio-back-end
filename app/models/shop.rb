@@ -6,5 +6,5 @@ class Shop < ApplicationRecord
   validates :name,
             length: { within: 1..255 },
             presence: true,
-            uniqueness: true
+            uniqueness: { scope: %i[owner_id] }
 end

@@ -16,7 +16,7 @@ class FinancialMovementParser
       hour = line[42..47]
       done_at = timezone.parse("#{date}#{hour}")
       {
-        kind: line[0],
+        kind: line[0].to_i,
         done_at: done_at,
         value: line[9..18].to_f / 100,
         card: line[30..41],
