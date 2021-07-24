@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+
+<h1 style="text-align: center">Pagamentos</h1>
+
+<%= form_tag '/financial_movements/upload', :multipart => true do %>
+   <label for="file">Importar arquivo</label> <%= file_field_tag "file", accept: 'text/plain' %>
+   <%= submit_tag %>
+<% end %>
+
+<br/>
+
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Data</th>
+      <th>Cartão</th>
+      <th>Valor</th>
+      <th>Loja</th>
+      <th>Representante</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @financial_movements.each do |movement| %>
+      <tr>
+        <td><%= movement.kind %></td>
+        <td><%= movement.done_at %></td>
+        <td><%= movement.card %></td>
+        <td><%= movement.value %></td>
+        <td><%= movement.shop&.name %></td>
+        <td><%= movement.shop&.owner&.name %></td>
+     </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

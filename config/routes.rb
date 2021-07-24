@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get 'financial_movements/index'
+  post 'financial_movements/upload'
+  root 'financial_movements#index'
 end
