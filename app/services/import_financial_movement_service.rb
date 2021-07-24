@@ -36,25 +36,29 @@ class ImportFinancialMovementService
   def find_or_create_shop(movement)
     shop_name = movement.dig(:shop, :name)
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop_name}")
-    shop = shops_by_name[shop_name] ||= Shop.create(name: shop_name, owner: find_or_create_owner(movement))
+    shops_by_name[shop_name] ||= Shop.create(name: shop_name, owner: find_or_create_owner(movement))
   end
 
   def find_or_create_owner(movement)
     document = movement.dig(:shop, :owner, :document)
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{document}")
-    owner = owners_by_doc[document] ||= Owner.create(movement.dig(:shop, :owner))
+    owners_by_doc[document] ||= Owner.create(movement.dig(:shop, :owner))
   end
 
   def import
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
     movements.collect do |e|
-      FinancialMovement.create(
+      movement = FinancialMovement.create(
         kind: e[:kind],
         done_at: e[:done_at],
         value: e[:value],
         card: e[:card],
         shop: find_or_create_shop(e)
       )
+
+      Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{movement.id} - #{movement.shop_id} - #{movement.shop&.name} - #{movement.errors.messages}")
+
+      movement
     end
   end
 end
