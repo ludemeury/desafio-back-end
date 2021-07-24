@@ -22,7 +22,7 @@ class ImportFinancialMovementService
 
     owner_docs = movements.collect { |e| e.dig(:shop, :owner, :document) }.compact.uniq.sort
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{owner_docs}")
-    @owners_by_doc = Owner.where(document: owner_docs).index_by(&:id)
+    @owners_by_doc = Owner.where(document: owner_docs).index_by(&:document)
   end
 
   def shops_by_name
@@ -30,7 +30,7 @@ class ImportFinancialMovementService
 
     shop_names = movements.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop_names}")
-    @shops_by_name = Shop.where(name: shop_names).index_by(&:id)
+    @shops_by_name = Shop.where(name: shop_names).index_by(&:name)
   end
 
   def find_or_create_shop(movement)
@@ -48,13 +48,11 @@ class ImportFinancialMovementService
   def import
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
     movements.collect do |e|
-      movement = FinancialMovement.create(
-        kind: e[:kind],
-        done_at: e[:done_at],
-        value: e[:value],
-        card: e[:card],
-        shop: find_or_create_shop(e)
-      )
+      params = e.slice(:kind, :done_at, :value, :card)
+      shop = find_or_create_shop(e)
+      Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{shop&.id}")
+      params[:shop] = shop
+      movement = FinancialMovement.create(params)
 
       Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__} - #{movement.id} - #{movement.shop_id} - #{movement.shop&.name} - #{movement.errors.messages}")
 

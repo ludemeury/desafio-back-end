@@ -15,14 +15,14 @@ RSpec.describe ImportFinancialMovementService do
 
     it 'all shops were imported' do
       inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
-      outputs = @movements_output.collect(&:shop).collect(&:name).compact.uniq.sort
-      expect(inputs).to eq outputs
+      outputs = @movements_output.collect(&:shop).select(&:persisted?).collect(&:name).compact.uniq.sort
+      expect(outputs).to eq inputs
     end
 
     it 'all owners were imported' do
       inputs = @movements_input.collect { |e| e.dig(:shop, :owner, :name) }.compact.uniq.sort
-      outputs = @movements_output.collect(&:shop).compact.collect(&:owner).compact.collect(&:name).compact.uniq.sort
-      expect(inputs).to eq outputs
+      outputs = @movements_output.collect(&:shop).compact.select(&:persisted?).collect(&:owner).compact.select(&:persisted?).collect(&:name).compact.uniq.sort
+      expect(outputs).to eq inputs
     end
 
     it 'all movements were imported with with existing shops' do
@@ -31,8 +31,8 @@ RSpec.describe ImportFinancialMovementService do
       @movements_output = ImportFinancialMovementService.new(@movements_input).execute
 
       inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
-      outputs = @movements_output.collect(&:shop).collect(&:name).compact.uniq.sort
-      expect(inputs).to eq outputs
+      outputs = @movements_output.collect(&:shop).compact.select(&:persisted?).collect(&:name).compact.uniq.sort
+      expect(outputs).to eq inputs
     end
   end
 end
