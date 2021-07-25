@@ -3,7 +3,7 @@
 class FinancialMovementsController < ApplicationController
   def index
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self.class}::#{__method__}")
-    @financial_movements = FinancialMovement.all.includes(shop: [:owner])
+    @shops = Shop.all.includes(financial_movements: [shop: [:owner]])
   end
 
   def upload

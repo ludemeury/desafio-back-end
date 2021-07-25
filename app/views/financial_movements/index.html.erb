@@ -9,11 +9,14 @@
 <% end %>
 
 <br/>
+<% @shops.each do |shop| %>
+<h1 style="text-align: center"><%= shop.name %></h1>
 
 <table style="width:100%">
   <thead>
     <tr>
       <th>Tipo</th>
+      <th>Operação</th>
       <th>Data</th>
       <th>Cartão</th>
       <th>Valor</th>
@@ -23,17 +26,25 @@
   </thead>
 
   <tbody>
-    <% @financial_movements.each do |movement| %>
-      <tr>
-        <td><%= movement.kind %></td>
-        <td><%= movement.done_at %></td>
-        <td><%= movement.card %></td>
-        <td><%= movement.value %></td>
-        <td><%= movement.shop&.name %></td>
-        <td><%= movement.shop&.owner&.name %></td>
-     </tr>
+      <% shop.financial_movements.each do |movement| %>
+        <tr>
+          <td><%= movement.kind %></td>
+          <td><%= movement.output? ? 'Saída' : 'Entrada'  %></td>
+          <td><%= movement.done_at %></td>
+          <td><%= movement.card %></td>
+          <td><%= movement.value %></td>
+          <td><%= movement.shop&.name %></td>
+          <td><%= movement.shop&.owner&.name %></td>
+      </tr>
     <% end %>
   </tbody>
-</table>
 
+  <tfoot>
+    <tr>
+      <td colspan="6" style='text-align: right;'>Saldo</td>
+      <td><%= shop.balance %></td>
+    </tr>
+  </tfoot>
+</table>
+<% end %>
 <br>
