@@ -1,6 +1,6 @@
 FROM ruby:2.6.2
 
-RUN apt-get update -qq && apt-get install -y nodejs sqlite3 libsqlite3-dev
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
 RUN mkdir /app
 WORKDIR /app
