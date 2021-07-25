@@ -10,7 +10,7 @@
 
 <br/>
 <% @shops.each do |shop| %>
-<h1 style="text-align: center"><%= shop.name %></h1>
+<h2 style="text-align: center"><%= shop.name %></h2>
 
 <table style="width:100%">
   <thead>
@@ -34,7 +34,7 @@
           <td><%= movement.card %></td>
           <td><%= number_to_currency(movement.value) %></td>
           <td><%= movement.shop&.name %></td>
-          <td><%= movement.shop&.owner&.name %></td>
+          <td><%= movement.shop&.owner&.document %> - <%= movement.shop&.owner&.name %></td>
       </tr>
     <% end %>
   </tbody>
