@@ -1,25 +1,19 @@
-
-version: "3.0"
-volumes:
-  bundle:
-  db:
-
+version: "3.9"
 services:
   db:
     image: nouchka/sqlite3:latest
-    volumes:
-      - db:/root/db
-    stdin_open: true
     tty: true
+    stdin_open: true
+    volumes:
+      - ./tmp/db:/root/db
   app:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
-    ports:
-      - "3000:3000"
-    tmpfs: /app/tmp
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     tty: true
     stdin_open: true
-    depends_on:
-      - db
     volumes:
       - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
