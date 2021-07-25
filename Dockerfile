@@ -9,7 +9,6 @@ ENV BUNDLER_VERSION=2.0.2
 RUN gem install bundler -v 2.0.2
 
 COPY Gemfile Gemfile.lock /app/
-# RUN bundle config build.nokogiri --use-system-libraries
 RUN bundle install
 
 COPY . ./app
