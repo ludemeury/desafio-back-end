@@ -16,5 +16,10 @@ RSpec.describe FinancialMovement, type: :model do
     it 'is valid with all valid data' do
       expect(FinancialMovement.create(kind: 1, done_at: Time.current, value: 595.32, card: '1234567', shop: @shop)).to be_valid
     end
+
+    it 'is not valid if repeated' do
+      FinancialMovement.create(kind: 1, done_at: Time.current, value: 595.32, card: '1234567', shop: @shop)
+      expect(FinancialMovement.create(kind: 1, done_at: Time.current, value: 595.32, card: '1234567', shop: @shop)).to_not be_valid
+    end
   end
 end
