@@ -5,6 +5,8 @@ class FinancialMovementParser
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self}::#{__method__}")
     return [] unless file_content.is_a? String
 
+    file_content = file_content.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace)
+
     document_lines = file_content.lines
 
     Rails.logger.info("#{Time.now.strftime('%F %T')} -  #{self}::#{__method__} - #{document_lines.length}")

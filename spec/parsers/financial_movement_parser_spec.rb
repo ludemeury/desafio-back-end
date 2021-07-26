@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 require 'rails_helper'
 
@@ -18,6 +18,10 @@ RSpec.describe FinancialMovementParser do
 
     it 'the input is the same size as the output' do
       expect(FinancialMovementParser.parse(@content_file).length).to eq @content_file.lines.length
+    end
+
+    it 'return must be a empty list when invalid utf8 content' do
+      expect(FinancialMovementParser.parse("\x80")).to match_array([])
     end
   end
 end
