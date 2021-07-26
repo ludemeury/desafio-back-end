@@ -1,12 +1,15 @@
 <p id="notice"><%= notice %></p>
 
 
-<h1 style="text-align: center">Pagamentos</h1>
+<h1 style="text-align: center">Importar movimentações financeiras</h1>
 
 <%= form_tag '/financial_movements/upload', :multipart => true do %>
-   <label for="file">Importar arquivo</label> <%= file_field_tag "file", accept: 'text/plain' %>
-   <%= submit_tag %>
+   <label for="file">Selecionar arquivo</label> <%= file_field_tag "file", accept: 'text/plain' %>
+   <%= submit_tag 'Enviar arquivo' %>
 <% end %>
+
+<br />
+<h1 style="text-align: center">Movimentações financieiras por loja</h1>
 
 <br/>
 <% @shops.each do |shop| %>
@@ -35,6 +38,7 @@
           <td><%= number_to_currency(movement.value) %></td>
           <td><%= movement.shop&.name %></td>
           <td><%= movement.shop&.owner&.document %> - <%= movement.shop&.owner&.name %></td>
+          <td><%= link_to 'Excluir', movement, method: :delete, data: { confirm: 'Confirmar exclusão?' } %></td>
       </tr>
     <% end %>
   </tbody>
