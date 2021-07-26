@@ -1,3 +1,37 @@
+# Instruções para rodar a aplicação
+
+**Comandos para rodar a aplicação usando o docker**
+```
+docker-compose build
+docker-compose run --rm app bundle install
+docker-compose run --rm app rails db:create
+docker-compose run --rm app rails db:migrate
+docker-compose up
+```
+
+**Comandos para rodar a aplicação sem docker**
+```
+bundle install
+rails db:create
+rails db:migrate
+rails s
+```
+
+**Comandos para rodar os testes**
+```
+# com docker
+docker-compose run --rm app rspec
+# sem o docker
+rspec
+```
+
+**Acessar a aplicação**
+
+- Acessar a aplicação pelo seguinte link: http://localhost:3000
+- Na tela que for carregada será exibida uma opção para fazer o upload do arquivo.
+- Caso exista dados já importados os mesmos serão listados
+- É possível excluir um pagamento. O pagamento excluído pode ser importado novamente.
+
 # Desafio programação - para vaga Back-end
 
 Por favor leiam este documento do começo ao fim, com muita atenção.
