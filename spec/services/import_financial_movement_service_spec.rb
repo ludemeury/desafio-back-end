@@ -27,7 +27,7 @@ RSpec.describe ImportFinancialMovementService do
 
     it 'all movements were imported with existing shops' do
       # import again
-      FinancialMovement.delete_all
+      FinancialMovement.destroy_all
       @movements_output = ImportFinancialMovementService.new(@movements_input).execute
 
       inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
@@ -37,8 +37,8 @@ RSpec.describe ImportFinancialMovementService do
 
     it 'all movements were imported wihout shop' do
       # import again
-      FinancialMovement.delete_all
-      Shop.delete_all
+      FinancialMovement.destroy_all
+      Shop.destroy_all
       @movements_output = ImportFinancialMovementService.new(@movements_input).execute
 
       inputs = @movements_input.collect { |e| e.dig(:shop, :name) }.compact.uniq.sort
