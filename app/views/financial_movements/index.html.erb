@@ -31,7 +31,7 @@
   <tbody>
       <% shop.financial_movements.each do |movement| %>
         <tr>
-          <td><%= movement.kind %></td>
+          <td><%= movement.kind %> - <%= t movement.kind, scope: [:financial_movement, :kinds] %></td>
           <td><%= movement.output? ? 'Saída' : 'Entrada'  %></td>
           <td><%= l movement.done_at, format: :long %></td>
           <td><%= movement.card %></td>

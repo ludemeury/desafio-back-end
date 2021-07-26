@@ -30,4 +30,14 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  financial_movement:
+    kinds:
+      1: 'debt'
+      2: 'ticket'
+      3: 'Financing'
+      4: 'Credit'
+      5: 'Loan Receipt'
+      6: 'Sales'
+      7: 'TED receipt'
+      8: 'DOC receipt'
+      9: 'Rent'
