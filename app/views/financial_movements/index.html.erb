@@ -12,8 +12,11 @@
 <h1 style="text-align: center">Movimentações financieiras por loja</h1>
 
 <br/>
+<% if @shops.blank? %>
+  <p style="text-align: center">Sem dado cadastrado</p>
+<% end %>
 <% @shops.each do |shop| %>
-<h2 style="text-align: center"><%= shop.name %></h2>
+<p style="text-align: center; font-weight: bold;"><%= shop.name %></p>
 
 <table style="width:100%">
   <thead>
