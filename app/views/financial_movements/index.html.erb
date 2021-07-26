@@ -1,0 +1,57 @@
+<p id="notice"><%= notice %></p>
+
+
+<h1 style="text-align: center">Importar movimentações financeiras</h1>
+
+<%= form_tag '/financial_movements/upload', :multipart => true do %>
+   <label for="file">Selecionar arquivo</label> <%= file_field_tag "file", accept: 'text/plain' %>
+   <%= submit_tag 'Enviar arquivo' %>
+<% end %>
+
+<br />
+<h1 style="text-align: center">Movimentações financieiras por loja</h1>
+
+<br/>
+<% if @shops.blank? %>
+  <p style="text-align: center">Sem dado cadastrado</p>
+<% end %>
+<% @shops.each do |shop| %>
+<p style="text-align: center; font-weight: bold;"><%= shop.name %></p>
+
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Operação</th>
+      <th>Data</th>
+      <th>Cartão</th>
+      <th>Valor</th>
+      <th>Loja</th>
+      <th>Representante</th>
+    </tr>
+  </thead>
+
+  <tbody>
+      <% shop.financial_movements.each do |movement| %>
+        <tr>
+          <td><%= movement.kind %> - <%= t movement.kind, scope: [:financial_movement, :kinds] %></td>
+          <td><%= movement.output? ? 'Saída' : 'Entrada'  %></td>
+          <td><%= l movement.done_at, format: :long %></td>
+          <td><%= movement.card %></td>
+          <td><%= number_to_currency(movement.value) %></td>
+          <td><%= movement.shop&.name %></td>
+          <td><%= movement.shop&.owner&.document %> - <%= movement.shop&.owner&.name %></td>
+          <td><%= link_to 'Excluir', movement, method: :delete, data: { confirm: 'Confirmar exclusão?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+  <tfoot>
+    <tr>
+      <td colspan="6" style='text-align: right;'>Saldo</td>
+      <td><%= number_to_currency(shop.balance) %></td>
+    </tr>
+  </tfoot>
+</table>
+<% end %>
+<br>
